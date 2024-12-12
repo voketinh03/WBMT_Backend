@@ -95,7 +95,7 @@ namespace WBMT.Controllers
             Orders.customer_id, 
             Products.product_name, 
             Order_Details.number_of_products, 
-            Orders.total_amount, 
+            Order_Details.total_money, 
             Orders.order_status
             FROM 
                 Orders
@@ -131,7 +131,7 @@ namespace WBMT.Controllers
                                     Id = reader["customer_id"]?.ToString(),
                                     ProductName = reader["product_name"]?.ToString(),
                                     Quantity = reader["number_of_products"] != DBNull.Value ? Convert.ToInt32(reader["number_of_products"]) : 0,
-                                    Price = reader["total_amount"] != DBNull.Value ? Convert.ToDecimal(reader["total_amount"]) : 0m,
+                                    Price = reader["total_money"] != DBNull.Value ? Convert.ToDecimal(reader["total_money"]) : 0m,
                                     OrderStatus = reader["order_status"]?.ToString()
                                 };
                                 OHList.Add(listOrder);
