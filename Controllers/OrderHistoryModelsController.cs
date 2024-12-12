@@ -88,7 +88,7 @@ namespace WBMT.Controllers
         //truy theo id đơn hàng
         [HttpGet("Lichsudonhang/{customerId}")]
         public JsonResult OrderHistory(int customerId)
-        {
+        { 
        string query = @"
         SELECT 
             Orders.order_id, 

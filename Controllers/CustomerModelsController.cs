@@ -169,12 +169,12 @@ namespace WBMT.Controllers
                 Console.WriteLine($"Error: {ex.Message}");
                 return new JsonResult(new { status = "error", message = $"An error occurred: {ex.Message}" });
             }
-        }
+        } 
        //xóa theo id
         [HttpDelete("DeleteCustomer/{id}")]
         public JsonResult DeleteCustomer(int id)
         {
-            try
+            try  
             {
                 // Query để xóa dữ liệu liên quan trong bảng Order_Details
            string deleteOrderDetailsQuery = @"
