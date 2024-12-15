@@ -145,65 +145,64 @@ namespace WBMT.Controllers
             return Ok(productct);
         }
 
+		// PUT: api/Products/5
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = ModelState });
+			}
 
-        // PUT: api/Products/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = ModelState });
-            }
+			using (var connection = new SqlConnection(_connectionString))
+			{
+				var sql = "UPDATE Products " +
+						  "SET product_name = @ProductName, " +
+						  "    category_id = @CategoryId, " +
+						  "    price = @Price, " +
+						  "    quantity = @Quantity, " +
+						  "    image_url = @ImageUrl, " +
+						  "    brand_id = @BrandId " +
+						  "WHERE product_id = @ProductId";
 
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var sql = "UPDATE Products " +
-                          "SET product_name = @ProductName, " +
-                          "    category_id = @CategoryId, " +
-                          "    price = @Price, " +
-                          "    quantity = @Quantity, " +
-                          "    image_url = @ImageUrl, " +
-                          "    brand_id = @BrandId " +
-                          "WHERE product_id = @ProductId";
+				using (var command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.AddWithValue("@ProductId", id);
+					command.Parameters.AddWithValue("@ProductName", product.ProductName);
+					command.Parameters.AddWithValue("@CategoryId", product.CategoryId);
+					command.Parameters.AddWithValue("@Price", product.Price);
+					command.Parameters.AddWithValue("@Quantity", product.Quantity);
+					command.Parameters.AddWithValue("@ImageUrl", (object)product.ImageUrl ?? DBNull.Value);
+					command.Parameters.AddWithValue("@BrandId", (object)product.BrandId ?? DBNull.Value);
 
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@ProductId", id);
-                    command.Parameters.AddWithValue("@ProductName", product.ProductName);
-                    command.Parameters.AddWithValue("@CategoryId", product.CategoryId);
-                    command.Parameters.AddWithValue("@Price", product.Price);
-                    command.Parameters.AddWithValue("@Quantity", product.Quantity);
-                    command.Parameters.AddWithValue("@ImageUrl", (object)product.ImageUrl ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@BrandId", (object)product.BrandId ?? DBNull.Value);
+					try
+					{
+						await connection.OpenAsync();
+						int rowsAffected = await command.ExecuteNonQueryAsync();
 
-                    try
-                    {
-                        await connection.OpenAsync();
-                        int rowsAffected = await command.ExecuteNonQueryAsync();
-
-                        if (rowsAffected > 0)
-                        {
-                            return Ok(new { message = "Cập nhật sản phẩm thành công." });
-                        }
-                        else
-                        {
-                            return NotFound(new { message = "Không tìm thấy sản phẩm hoặc không có thay đổi." });
-                        }
-                    }
-                    catch (SqlException ex)
-                    {
-                        return StatusCode(500, new { message = $"Lỗi cơ sở dữ liệu: {ex.Message}" });
-                    }
-                }
-            }
-        }
-
+						if (rowsAffected > 0)
+						{
+							return Ok(new { message = "Cập nhật sản phẩm thành công." });
+						}
+						else
+						{
+							return NotFound(new { message = "Không tìm thấy sản phẩm hoặc không có thay đổi." });
+						}
+					}
+					catch (SqlException ex)
+					{
+						return StatusCode(500, new { message = $"Lỗi cơ sở dữ liệu: {ex.Message}" });
+					}
+				}
+			}
+		}
 
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // POST: api/Products
-        [HttpPost]
+
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		// POST: api/Products
+		[HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] Product product)
         {
             // Kiểm tra ràng buộc dữ liệu
