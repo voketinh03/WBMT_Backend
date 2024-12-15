@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WBMT")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8eeb0aa7cef884389921702097b635296f1f94bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("WBMT")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WBMT")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

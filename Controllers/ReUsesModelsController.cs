@@ -56,13 +56,13 @@ namespace WBMT.Controllers
                 }
 
                 //  Mã hóa mật khẩu trước khi lưu
-                string hashedPassword;
-                using (SHA256 sha256 = SHA256.Create())
-                {
-                    byte[] passwordBytes = Encoding.UTF8.GetBytes(reUsersModel.Password);
-                    byte[] hashBytes = sha256.ComputeHash(passwordBytes);
-                    hashedPassword = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-                }
+                //string hashedPassword;
+                //using (SHA256 sha256 = SHA256.Create())
+                //{
+                //    byte[] passwordBytes = Encoding.UTF8.GetBytes(reUsersModel.Password);
+                //    byte[] hashBytes = sha256.ComputeHash(passwordBytes);
+                //    hashedPassword = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+                //}
 
                 //  Thêm người dùng vào cơ sở dữ liệu với vai trò mặc định là 'user'
                string queryInsertUsers = @"
@@ -78,7 +78,7 @@ namespace WBMT.Controllers
                         myCommand.Parameters.AddWithValue("@username", reUsersModel.UserName);
                         myCommand.Parameters.AddWithValue("@email", reUsersModel.Email);
                         myCommand.Parameters.AddWithValue("@phone", reUsersModel.Phone);
-                        myCommand.Parameters.AddWithValue("@password", hashedPassword); // Lưu mật khẩu đã mã hóa
+                        myCommand.Parameters.AddWithValue("@password", reUsersModel.Password); 
                         myCommand.Parameters.AddWithValue("@address", reUsersModel.Address);
 
                         int result = myCommand.ExecuteNonQuery();

@@ -151,54 +151,49 @@ namespace WBMT.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
         {
-            if (product == null || product.ProductId != id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Product data is invalid.");
+                return BadRequest(new { message = "Dữ liệu không hợp lệ.", errors = ModelState });
             }
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                var sql = @"UPDATE Products 
-                    SET product_name = @ProductName, 
-                        category_id = @CategoryId, 
-                        price = @Price, 
-                        quantity = @Quantity, 
-                        image_url = @ImageUrl, 
-                        brand_id = @BrandId 
-                    WHERE product_id = @ProductId";
+                var sql = "UPDATE Products " +
+                          "SET product_name = @ProductName, " +
+                          "    category_id = @CategoryId, " +
+                          "    price = @Price, " +
+                          "    quantity = @Quantity, " +
+                          "    image_url = @ImageUrl, " +
+                          "    brand_id = @BrandId " +
+                          "WHERE product_id = @ProductId";
 
                 using (var command = new SqlCommand(sql, connection))
                 {
-                    // Add parameters to prevent SQL injection
+                    command.Parameters.AddWithValue("@ProductId", id);
                     command.Parameters.AddWithValue("@ProductName", product.ProductName);
                     command.Parameters.AddWithValue("@CategoryId", product.CategoryId);
                     command.Parameters.AddWithValue("@Price", product.Price);
                     command.Parameters.AddWithValue("@Quantity", product.Quantity);
                     command.Parameters.AddWithValue("@ImageUrl", (object)product.ImageUrl ?? DBNull.Value);
                     command.Parameters.AddWithValue("@BrandId", (object)product.BrandId ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@ProductId", id);
 
                     try
                     {
-                        // Open the connection
                         await connection.OpenAsync();
-
-                        // Execute the command
                         int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
-                            return Ok("Product updated successfully.");
+                            return Ok(new { message = "Cập nhật sản phẩm thành công." });
                         }
                         else
                         {
-                            return NotFound($"Product with ID {id} not found.");
+                            return NotFound(new { message = "Không tìm thấy sản phẩm hoặc không có thay đổi." });
                         }
                     }
                     catch (SqlException ex)
                     {
-                        // Log the error (not shown) and return an error response
-                        return StatusCode(500, $"Database error: {ex.Message}");
+                        return StatusCode(500, new { message = $"Lỗi cơ sở dữ liệu: {ex.Message}" });
                     }
                 }
             }

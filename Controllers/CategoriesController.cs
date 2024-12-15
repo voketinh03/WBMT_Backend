@@ -7,6 +7,18 @@ using WBMT.Model;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
+
+using System;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using WBMT.Models;
+
+
 namespace WBMT.Controllers
 {
     [Route("api/[controller]")]
@@ -99,26 +111,72 @@ namespace WBMT.Controllers
             return new JsonResult("Cap nhat thanh cong");
         }
 
-        [HttpDelete]
-        public JsonResult Delete(int ma)
+        [HttpDelete("{id}")]
+        
+        public JsonResult Delete(int id)
         {
-            string query = @"Delete From Categories Where category_id = " + ma;
-            DataTable table = new DataTable();
-            String SqlDataSource = _configuration.GetConnectionString("WBMT");
-            SqlDataReader myReader;
-
-            using (SqlConnection myCon = new SqlConnection(SqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                // Query để xóa dữ liệu liên quan trong bảng Order_Details
+                
+                // Query để xóa dữ liệu liên quan trong bảng Orders
+               
+
+                // Query để xóa bản ghi trong bảng Users nếu role_id = 2 và name = 'user'
+                string deleteCategoriesQuery = @"
+            DELETE FROM Categories
+            WHERE category_id = @Id";
+
+
+                string sqlDataSource = _configuration.GetConnectionString("WBMT");
+
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+
+                    // Sử dụng transaction để đảm bảo tính toàn vẹn dữ liệu
+                    using (SqlTransaction transaction = myCon.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Xóa dữ liệu trong bảng Order_Details
+                            
+
+                            // Xóa dữ liệu trong bảng Orders
+                            
+
+                            // Xóa dữ liệu trong bảng Users
+                            using (SqlCommand userCommand = new SqlCommand(deleteCategoriesQuery, myCon, transaction))
+                            {
+                                userCommand.Parameters.AddWithValue("@Id", id);
+                                int rowsAffected = userCommand.ExecuteNonQuery();
+
+                                if (rowsAffected > 0)
+                                {
+                                    transaction.Commit();
+                                    return new JsonResult(new { status = "success", message = "Customer deleted successfully" });
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    return new JsonResult(new { status = "error", message = "Customer not found" });
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            Console.WriteLine($"Error during transaction: {ex.Message}");
+                            return new JsonResult(new { status = "error", message = $"An error occurred: {ex.Message}" });
+                        }
+                    }
                 }
             }
-            return new JsonResult("Xoa bo thanh cong");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return new JsonResult(new { status = "error", message = $"An error occurred: {ex.Message}" });
+            }
         }
 
         [Route("GetAllDanhmuc")]
