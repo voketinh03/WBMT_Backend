@@ -38,11 +38,11 @@ namespace WBMT.Controllers
 				connection.Open();
 
 				string query = @"
-        SELECT p.product_id, p.product_name, p.brand_id, p.category_id, p.price, p.quantity, p.image_url,
-               b.brand_name, c.category_name, c.description AS category_description
-        FROM Products p
-        JOIN Brands b ON p.brand_id = b.brand_id
-        JOIN Categories c ON p.category_id = c.category_id";
+		SELECT p.product_id, p.product_name, p.brand_id, p.category_id, p.price, p.quantity, p.image_url,
+			b.brand_name, c.category_name, c.description AS category_description
+		FROM Products p
+		JOIN Brands b ON p.brand_id = b.brand_id
+		JOIN Categories c ON p.category_id = c.category_id";
 
 				using (SqlCommand command = new SqlCommand(query, connection))
 				{
@@ -93,7 +93,7 @@ namespace WBMT.Controllers
 				// Truy vấn một sản phẩm theo id kết hợp với bảng Brands và Categories
 				string query = @"
 		SELECT p.product_id, p.product_name, p.brand_id, p.category_id, p.price, p.quantity, p.image_url,
-			   b.brand_name, c.category_name, c.description AS category_description
+			b.brand_name, c.category_name, c.description AS category_description
 		FROM Products p
 		JOIN Brands b ON p.brand_id = b.brand_id
 		JOIN Categories c ON p.category_id = c.category_id
@@ -144,17 +144,17 @@ namespace WBMT.Controllers
 
 				// Truy vấn sản phẩm với các từ khóa liên quan đến máy tính/laptop
 				string query = @"
-            SELECT p.product_id, p.product_name, p.brand_id, p.category_id, p.price, p.quantity, p.image_url,
-                   b.brand_name, c.category_name, c.description AS category_description
-            FROM Products p
-            JOIN Brands b ON p.brand_id = b.brand_id
-            JOIN Categories c ON p.category_id = c.category_id
-            WHERE (@Name IS NULL OR p.product_name LIKE '%' + @Name + '%'
-                                  OR p.product_name LIKE '%laptop%'
-                                  OR p.product_name LIKE '%computer%'
-                                  OR p.product_name LIKE '%pc%'
-                                  OR p.product_name LIKE '%notebook%')
-              AND (@BrandName IS NULL OR b.brand_name LIKE '%' + @BrandName + '%')";
+			SELECT p.product_id, p.product_name, p.brand_id, p.category_id, p.price, p.quantity, p.image_url,
+				b.brand_name, c.category_name, c.description AS category_description
+			FROM Products p
+			JOIN Brands b ON p.brand_id = b.brand_id
+			JOIN Categories c ON p.category_id = c.category_id
+			WHERE (@Name IS NULL OR p.product_name LIKE '%' + @Name + '%'
+								OR p.product_name LIKE '%laptop%'
+								OR p.product_name LIKE '%computer%'
+								OR p.product_name LIKE '%pc%'
+								OR p.product_name LIKE '%notebook%')
+			AND (@BrandName IS NULL OR b.brand_name LIKE '%' + @BrandName + '%')";
 
 				using (SqlCommand command = new SqlCommand(query, connection))
 				{
@@ -194,9 +194,8 @@ namespace WBMT.Controllers
 
 			return Ok(new { status = "success", data = productcts });
 		}
-
 		
-
+		
 		// PUT: api/Products/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{id}")]
@@ -250,9 +249,6 @@ namespace WBMT.Controllers
 			}
 		}
 
-
-
-
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
 		public async Task<IActionResult> CreateProduct([FromBody] Product product)
@@ -266,7 +262,7 @@ namespace WBMT.Controllers
 			using (var connection = new SqlConnection(_connectionString))
 			{
 				var checkProductSql = @"
-            SELECT COUNT(*) FROM Products WHERE product_name = @ProductName";
+			SELECT COUNT(*) FROM Products WHERE product_name = @ProductName";
 
 				using (var checkCommand = new SqlCommand(checkProductSql, connection))
 				{
@@ -290,8 +286,8 @@ namespace WBMT.Controllers
 
 				// Nếu tên sản phẩm chưa tồn tại, thêm mới sản phẩm vào cơ sở dữ liệu
 				var sql = @"
-            INSERT INTO Products (product_name, category_id, price, quantity, image_url, brand_id)
-            VALUES (@ProductName, @CategoryId, @Price, @Quantity, @ImageUrl, @BrandId)";
+			INSERT INTO Products (product_name, category_id, price, quantity, image_url, brand_id)
+			VALUES (@ProductName, @CategoryId, @Price, @Quantity, @ImageUrl, @BrandId)";
 
 				using (var command = new SqlCommand(sql, connection))
 				{
@@ -323,7 +319,7 @@ namespace WBMT.Controllers
 			}
 		}
 
-		[HttpDelete("{id}")]
+				[HttpDelete("{id}")]
 		public IActionResult DeleteProduct(int id)
 		{
 			try
