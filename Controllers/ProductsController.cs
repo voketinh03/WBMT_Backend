@@ -319,7 +319,7 @@ namespace WBMT.Controllers
 			}
 		}
 
-				[HttpDelete("{id}")]
+		[HttpDelete("{id}")]
 		public IActionResult DeleteProduct(int id)
 		{
 			try
