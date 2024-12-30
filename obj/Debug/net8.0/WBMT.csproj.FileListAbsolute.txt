@@ -531,3 +531,6 @@ D:\Chinh1.1\WBMT\WBMT\obj\Debug\net8.0\refint\WBMT.dll
 D:\Chinh1.1\WBMT\WBMT\obj\Debug\net8.0\WBMT.pdb
 D:\Chinh1.1\WBMT\WBMT\obj\Debug\net8.0\WBMT.genruntimeconfig.cache
 D:\Chinh1.1\WBMT\WBMT\obj\Debug\net8.0\ref\WBMT.dll
+C:\WBMT\WBMT_Backend\obj\Debug\net8.0\WBMT.dll
+C:\WBMT\WBMT_Backend\obj\Debug\net8.0\refint\WBMT.dll
+C:\WBMT\WBMT_Backend\obj\Debug\net8.0\WBMT.pdb
