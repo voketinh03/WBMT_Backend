@@ -165,7 +165,7 @@ namespace WBMT.Controllers
         }
     }
 
-    // DELETE: api/Brands/{id}
+        // DELETE: api/Brands/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBrand(int id)
     {

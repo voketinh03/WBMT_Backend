@@ -27,7 +27,7 @@ namespace WBMT.Controllers
 			_connectionString = configuration.GetConnectionString("WBMT");
 		}
 
-		// GET: api/Products
+	    // GET: api/Products
 		[HttpGet]
 		public IActionResult GetAllProducts()
 		{
